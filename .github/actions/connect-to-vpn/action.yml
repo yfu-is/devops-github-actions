@@ -24,9 +24,16 @@ runs:
     - name: Connect to VPN
       shell: bash
       run: |
-        sudo openvpn --config <(echo "${{ inputs.config }}") \
-          --auth-user-pass <(echo -e "${{ inputs.username }}\n${{ inputs.password }}") \
+        echo "${{ inputs.config }}" > /tmp/vpn.ovpn
+        echo -e "${{ inputs.username }}\n${{ inputs.password }}" > /tmp/auth.txt
+        chmod 600 /tmp/vpn.ovpn /tmp/auth.txt
+        
+        sudo openvpn \
+          --config /tmp/vpn.ovpn \
+          --auth-user-pass /tmp/auth.txt \
           --daemon
+        
+        rm -f /tmp/vpn.ovpn /tmp/auth.txt
 
     - name: Waiting for VPN Connection
       shell: bash
