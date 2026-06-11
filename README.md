@@ -23,3 +23,21 @@ other Github actions.
     docker_registry_password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
     ssh_private_key: ${{ secrets.MACHINEUSER_SSH_PRIVATE_KEY }}
 ```
+
+### `connect-to-vpn`
+
+#### What it does
+* Connects to an OpenVPN network
+
+#### How it's used
+
+```
+- name: Connect to OpenVPN
+  uses: yfu-is/devops-github-actions/.github/actions/connect-to-vpn@main
+  with:
+    username: ${{ secrets.OPENVPN_USERNAME }}
+    password: ${{ secrets.OPENVPN_PASSWORD }}
+    config: ${{ secrets.OPENVPN_CONFIG }}
+    # seconds to wait for connection establishment, optional, default: 30
+    wait: 30
+```

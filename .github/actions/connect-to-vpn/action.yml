@@ -1,0 +1,35 @@
+name: Connect to OpenVPN
+description: Connects to an OpenVPN network
+
+inputs:
+  username:
+    required: true
+  password:
+    required: true
+  config:
+    required: true
+  wait:
+    required: false
+    default: 30
+
+runs:
+  using: composite
+  steps:
+    - name: Install OpenVPN
+      shell: bash
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq openvpn
+
+    - name: Connect to VPN
+      shell: bash
+      run: |
+        sudo openvpn --config <(echo "${{ inputs.config }}") \
+          --auth-user-pass <(echo -e "${{ inputs.username }}\n${{ inputs.password }}") \
+          --daemon
+
+    - name: Waiting for VPN Connection
+      shell: bash
+      run: |
+        timeout ${{ inputs.wait }} bash -c 'until ip link show type tun | grep -q tun; do sleep 1; done' || \
+        { echo "VPN connection timed out"; exit 1; }
