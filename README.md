@@ -15,7 +15,7 @@ other Github actions.
 #### How it's used
 
 ```
-- name: Common Setup
+- name: Common Build Setup
   uses: yfu-is/devops-github-actions/.github/actions/common-build-setup@main
   with:
     docker_registry_url: ${{ vars.DOCKER_REGISTRY_URL }}
